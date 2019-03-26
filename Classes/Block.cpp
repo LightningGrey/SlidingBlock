@@ -90,6 +90,6 @@ void Block::update(float dt)
 {
 	//force = (this->mass * 9.8, 0);
 	//acceleration;
-	//velocity;
-//	getPrimitive()->setPosition;
+	//velocity = ;
+    getPrimitive()->setPosition(position);
 }
