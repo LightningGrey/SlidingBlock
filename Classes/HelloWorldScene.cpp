@@ -88,11 +88,12 @@ bool HelloWorld::init()
     /////////////////////////////
     // 3. add your codes below...
 
-	block.getPrimitive()->setRotation(block.getAngle());
-	slope.getPrimitive()->setRotation(slope.getAngle());
-	
-	this->addChild(block.getPrimitive());
-	this->addChild(slope.getPrimitive());
+	block = new Block(this, cocos2d::Vec2(100, 800), cocos2d::Vec2(300, 900), 100.0f, cocos2d::Vec2(0, 0),
+	cocos2d::Vec2(0,0), 45.0f, 0.10f, 0.10f);
+	slope = new Slope(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(1600, 900), 0.20f, 45.0f);
+
+	block->getPrimitive()->setRotation(block->getAngle());
+	slope->getPrimitive()->setRotation(slope->getAngle());
 	
 }
 

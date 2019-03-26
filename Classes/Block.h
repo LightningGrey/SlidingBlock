@@ -4,7 +4,7 @@
 //block class
 class Block{
 public:
-	Block(const cocos2d::Vec2 &start, const cocos2d::Vec2 &end, float a_mass, cocos2d::Vec2 a_velocity,
+	Block(cocos2d::Scene* parentScene, const cocos2d::Vec2 &start, const cocos2d::Vec2 &end, float a_mass, cocos2d::Vec2 a_velocity,
 		cocos2d::Vec2 a_acceleration, float a_angle, float a_staticFriction, float a_dynamicFriction);
 	~Block();
 
@@ -28,15 +28,19 @@ public:
 	float getDynamicFriction();
 	void setDynamicFriction(float a_dynamicFriction);
 
+	void update(float dt);
 
 private:
 	//drawing
+	cocos2d::Scene *parentScene;
 	cocos2d::DrawNode *blockNode;
 
 	//block variables
 	float mass;
 	cocos2d::Vec2 velocity;
 	cocos2d::Vec2 acceleration;
+	cocos2d::Vec2 force;
+
 	float angle;
 	float staticFriction;
 	float dynamicFriction;
