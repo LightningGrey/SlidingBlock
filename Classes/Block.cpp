@@ -13,6 +13,9 @@ Block::Block(cocos2d::Scene* parentScene, const cocos2d::Vec2 &start, const coco
 		cocos2d::Color4F(0.0f, 1.0f, 0.0f, 1.0f));
 	blockNode->setPosition(start);
 
+	getPrimitive()->setRotation(getAngle());
+	position = blockNode->getPosition();
+
 	this->parentScene = parentScene;
 	parentScene->addChild(blockNode);
 }
@@ -86,10 +89,22 @@ void Block::setDynamicFriction(float a_dynamicFriction)
 	this->dynamicFriction = a_dynamicFriction;
 }
 
+cocos2d::Vec2 Block::getPosition()
+{
+	return position;
+}
+
+void Block::setPosition(cocos2d::Vec2 a_Position)
+{
+	this->position = position;
+}
+
 void Block::update(float dt)
 {
-	//force = (this->mass * 9.8, 0);
-	//acceleration;
-	//velocity = ;
+	//force = cocos2d::Vec2(0.0f, this->mass * -98.0f); //+ cocos2d::Vec2(0.0f, mass * 9.8f);
+	force = cocos2d::Vec2(this->mass * 98.0f * sin(angle), this->mass * -98.0f * sin(angle));
+	acceleration = force/this->mass;
+	velocity += acceleration * dt;
+	position = getPrimitive()->getPosition() + (velocity * dt);
     getPrimitive()->setPosition(position);
 }

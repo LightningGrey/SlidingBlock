@@ -85,20 +85,24 @@ bool HelloWorld::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
+	this->scheduleUpdate();
+
     /////////////////////////////
     // 3. add your codes below...
 
-	block = new Block(this, cocos2d::Vec2(100, 800), cocos2d::Vec2(300, 900), 100.0f, cocos2d::Vec2(0, 0),
-	cocos2d::Vec2(0,0), 45.0f, 0.10f, 0.10f);
+	block = new Block(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(200, 1000), 200.0f, 
+		cocos2d::Vec2(0.0f, 0.0f), cocos2d::Vec2(0.0f,0.0f), 45.0f, 0.10f, 0.10f);
 	slope = new Slope(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(1600, 900), 0.20f, 45.0f);
-
-	block->getPrimitive()->setRotation(block->getAngle());
-	slope->getPrimitive()->setRotation(slope->getAngle());
 	
 }
 
 void HelloWorld::update(float dt) {
-
+	if (block->getPrimitive()->getPosition().y < 0.0f) {
+		block->setVelocity(Vec2(0.0f, 0.0f));
+	}
+	else {
+		block->update(dt);
+	}
 }
 
 
