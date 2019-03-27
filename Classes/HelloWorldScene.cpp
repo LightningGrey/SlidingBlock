@@ -91,8 +91,8 @@ bool HelloWorld::init()
     // 3. add your codes below...
 
 	block = new Block(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(200, 1000), 200.0f, 
-		cocos2d::Vec2(0.0f, 0.0f), cocos2d::Vec2(0.0f,0.0f), 45.0f, 0.10f, 0.10f);
-	slope = new Slope(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(1600, 900), 0.20f, 45.0f);
+		cocos2d::Vec2(0.0f, 0.0f), cocos2d::Vec2(0.0f,0.0f), 30.0f, 0.10f, 0.10f);
+	slope = new Slope(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(2000, 900), 0.20f, 30.0f);
 	
 }
 
