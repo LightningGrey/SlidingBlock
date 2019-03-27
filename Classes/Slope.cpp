@@ -8,6 +8,8 @@ Slope::Slope(cocos2d::Scene* parentScene, const cocos2d::Vec2 &start, const coco
 		cocos2d::Color4F(1.0f, 0.0f, 0.0f, 1.0f));
 	slopeNode->setPosition(start);
 
+	getPrimitive()->setRotation(getAngle());
+
 	this->parentScene = parentScene;
 	parentScene->addChild(slopeNode);
 }
