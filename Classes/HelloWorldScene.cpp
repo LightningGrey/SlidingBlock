@@ -85,6 +85,14 @@ bool HelloWorld::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
+	//setting keyboard for input
+	keyboard = cocos2d::EventListenerKeyboard::create();
+
+	keyboard->onKeyPressed = CC_CALLBACK_2(HelloWorld::keyDown, this);
+	keyboard->onKeyReleased = CC_CALLBACK_2(HelloWorld::keyUp, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboard, this);
+
+	//update scheduling
 	this->scheduleUpdate();
 
     /////////////////////////////
@@ -97,11 +105,89 @@ bool HelloWorld::init()
 }
 
 void HelloWorld::update(float dt) {
-	if (block->getPrimitive()->getPosition().y < 0.0f) {
-		block->setVelocity(Vec2(0.0f, 0.0f));
+	if (q == true) {
+		block->setStaticFriction(block->getStaticFriction() - 1);
 	}
-	else {
-		block->update(dt);
+	if (e == true) {
+		block->setStaticFriction(block->getStaticFriction() + 1);
+	}
+	if (a == true) {
+		block->setDynamicFriction(block->getDynamicFriction() - 1);
+	}
+	if (d == true) {
+		block->setDynamicFriction(block->getDynamicFriction() + 1);
+	}
+	if (up == true) {
+		block->setAngle(block->getAngle()-1);
+		slope->setAngle(slope->getAngle()-1);
+		block->getPrimitive()->setRotation(block->getAngle() - 1);
+		slope->getPrimitive()->setRotation(slope->getAngle() - 1);
+	}
+	if (down == true) {
+		block->setAngle(block->getAngle() + 1);
+		slope->setAngle(slope->getAngle() + 1);
+		block->getPrimitive()->setRotation(block->getAngle() + 1);
+		slope->getPrimitive()->setRotation(slope->getAngle() + 1);
+	}
+	if (space == true) {
+		block->getPrimitive()->setPosition(cocos2d::Vec2(0, 900));
+		block->setVelocity(cocos2d::Vec2(0.0f, 0.0f));
+		//space = false;
+	}
+
+	if (block->getPrimitive()->getPosition().y < 0.0f) {
+		block->setVelocity(cocos2d::Vec2(0.0f, 0.0f));
+	}
+
+	block->update(dt);
+
+}
+
+void HelloWorld::keyDown(cocos2d::EventKeyboard::KeyCode key, cocos2d::Event* event) {
+	if (key == EventKeyboard::KeyCode::KEY_Q) {
+		q = true;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_E) {
+		e = true;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_A) {
+		a = true;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_D) {
+		d = true;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_UP_ARROW) {
+		up = true;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+		down = true;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_SPACE) {
+		space = true;
+	}
+}
+
+void HelloWorld::keyUp(cocos2d::EventKeyboard::KeyCode key, cocos2d::Event* event) {
+	if (key == EventKeyboard::KeyCode::KEY_Q) {
+		q = false;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_E) {
+		e = false;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_A) {
+		a = false;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_D) {
+		d = false;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_UP_ARROW) {
+		up = false;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+		down = false;
+	}
+	if (key == EventKeyboard::KeyCode::KEY_SPACE) {
+		space = false;
 	}
 }
 
