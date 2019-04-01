@@ -101,9 +101,10 @@ void Block::setPosition(cocos2d::Vec2 a_Position)
 
 void Block::update(float dt)
 {
-	//force = cocos2d::Vec2(0.0f, this->mass * -98.0f); //+ cocos2d::Vec2(0.0f, mass * 9.8f);
-	force = cocos2d::Vec2(this->mass * 98.0f * cos(angle*3.14f/180.f), this->mass * -98.0f * sin(angle*3.14f/180.f));
+	//force = cocos2d::Vec2(this->mass * 98.0f * cos(angle*3.14f/180.f), this->mass * -98.0f * sin(angle*3.14f/180.f));
+	force = cocos2d::Vec2(this->mass * 98.0f * cos(angle*3.14f / 180.f), this->mass * -98.0f * sin(angle*3.14f / 180.f));
 	acceleration = force/this->mass;
+	//acceleration = cocos2d::Vec2(98.0f*cos(angle*3.14f / 180.f), 98.0f*sin(angle*3.14f / 180.f));
 	velocity += acceleration * dt;
 	position = getPrimitive()->getPosition() + (velocity * dt);
     getPrimitive()->setPosition(position);

@@ -102,32 +102,44 @@ bool HelloWorld::init()
 		cocos2d::Vec2(0.0f, 0.0f), cocos2d::Vec2(0.0f,0.0f), 30.0f, 0.10f, 0.10f);
 	slope = new Slope(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(2000, 900), 0.20f, 30.0f);
 	
+	data = cocos2d::Label::createWithTTF("Hello World", "fonts/Arial.ttf", 24);
+	data->setColor(cocos2d::Color3B::WHITE);
+	data->setPosition(1200, 800);
+	data->setSystemFontSize(12.0f);
+	this->addChild(data);
+
 }
 
 void HelloWorld::update(float dt) {
 	if (q == true) {
-		block->setStaticFriction(block->getStaticFriction() - 1);
+		block->setStaticFriction(block->getStaticFriction() - 1.0f);
+		data->setString(std::to_string(block->getStaticFriction()));
 	}
 	if (e == true) {
-		block->setStaticFriction(block->getStaticFriction() + 1);
+		block->setStaticFriction(block->getStaticFriction() + 1.0f);
+		data->setString(std::to_string(block->getStaticFriction()));
 	}
 	if (a == true) {
-		block->setDynamicFriction(block->getDynamicFriction() - 1);
+		block->setDynamicFriction(block->getDynamicFriction() - 1.0f);
+		data->setString(std::to_string(block->getDynamicFriction()));
 	}
 	if (d == true) {
-		block->setDynamicFriction(block->getDynamicFriction() + 1);
+		block->setDynamicFriction(block->getDynamicFriction() + 1.0f);
+		data->setString(std::to_string(block->getDynamicFriction()));
 	}
 	if (up == true) {
-		block->setAngle(block->getAngle()-1);
-		slope->setAngle(slope->getAngle()-1);
-		block->getPrimitive()->setRotation(block->getAngle() - 1);
-		slope->getPrimitive()->setRotation(slope->getAngle() - 1);
+		slope->setAngle(slope->getAngle() - 1.0f);
+		block->setAngle(slope->getAngle());
+		slope->getPrimitive()->setRotation(slope->getAngle());
+		block->getPrimitive()->setRotation(slope->getAngle());
+		data->setString(std::to_string(block->getAngle()));
 	}
 	if (down == true) {
-		block->setAngle(block->getAngle() + 1);
-		slope->setAngle(slope->getAngle() + 1);
-		block->getPrimitive()->setRotation(block->getAngle() + 1);
-		slope->getPrimitive()->setRotation(slope->getAngle() + 1);
+		slope->setAngle(slope->getAngle() + 1.0f);
+		block->setAngle(slope->getAngle());
+		slope->getPrimitive()->setRotation(slope->getAngle());
+		block->getPrimitive()->setRotation(block->getAngle());
+		data->setString(std::to_string(block->getAngle()));
 	}
 	if (space == true) {
 		block->getPrimitive()->setPosition(cocos2d::Vec2(0, 900));
@@ -135,7 +147,7 @@ void HelloWorld::update(float dt) {
 		//space = false;
 	}
 
-	if (block->getPrimitive()->getPosition().y < 0.0f) {
+	if (block->getPrimitive()->getPosition().y < -100.0f) {
 		block->setVelocity(cocos2d::Vec2(0.0f, 0.0f));
 	}
 

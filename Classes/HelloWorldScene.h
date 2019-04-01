@@ -53,6 +53,8 @@ public:
 	void HelloWorld::keyDown(cocos2d::EventKeyboard::KeyCode key, cocos2d::Event* event);
 	void HelloWorld::keyUp(cocos2d::EventKeyboard::KeyCode key, cocos2d::Event* event);
 	
+	cocos2d::Label* data;
+
 	bool q, e, a, d, up, down, space = false;
 
 };
