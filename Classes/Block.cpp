@@ -2,11 +2,12 @@
 
 Block::Block(cocos2d::Scene* parentScene, const cocos2d::Vec2 &start, const cocos2d::Vec2 &end, float a_mass, 
 	cocos2d::Vec2 a_velocity, cocos2d::Vec2 a_acceleration, float a_angle, float a_staticFriction, 
-	float a_dynamicFriction) 
+	float a_kineticFriction) 
 	: blockNode(cocos2d::DrawNode::create()), mass (a_mass), velocity (a_velocity), 
 	acceleration (a_acceleration), angle (a_angle), staticFriction (a_staticFriction),
-	dynamicFriction(a_dynamicFriction)
+	kineticFriction(a_kineticFriction)
 {
+	stopped = true;
 	//drawRect draws from corner of node to distant between start and end position
 	//draws rectangle to node instead of relative position from node, easier to understand positioning
 	blockNode->drawSolidRect(cocos2d::Vec2(0.0f, 0.0f), end - start,
@@ -79,14 +80,14 @@ void Block::setStaticFriction(float a_staticFriction)
 	this->staticFriction = a_staticFriction;
 }
 
-float Block::getDynamicFriction()
+float Block::getKineticFriction()
 {
-	return dynamicFriction;
+	return kineticFriction;
 }
 
-void Block::setDynamicFriction(float a_dynamicFriction)
+void Block::setKineticFriction(float a_kineticFriction)
 {
-	this->dynamicFriction = a_dynamicFriction;
+	this->kineticFriction = a_kineticFriction;
 }
 
 cocos2d::Vec2 Block::getPosition()
@@ -99,13 +100,33 @@ void Block::setPosition(cocos2d::Vec2 a_Position)
 	this->position = position;
 }
 
+bool Block::getStopped()
+{
+	return stopped;
+}
+
+void Block::setStopped(bool a_stopped)
+{
+	this->stopped = a_stopped;
+}
+
 void Block::update(float dt)
 {
-	//force = cocos2d::Vec2(this->mass * 98.0f * cos(angle*3.14f/180.f), this->mass * -98.0f * sin(angle*3.14f/180.f));
-	force = cocos2d::Vec2(this->mass * 98.0f * cos(angle*3.14f / 180.f), this->mass * -98.0f * sin(angle*3.14f / 180.f));
-	acceleration = force/this->mass;
-	//acceleration = cocos2d::Vec2(98.0f*cos(angle*3.14f / 180.f), 98.0f*sin(angle*3.14f / 180.f));
-	velocity += acceleration * dt;
-	position = getPrimitive()->getPosition() + (velocity * dt);
-    getPrimitive()->setPosition(position);
+	//force = cocos2d::Vec2((mass * 9.80f * sin(angle*3.14f / 180.f)) - ((mass * 9.80f)*kineticFriction),
+	//	mass * -9.80f * cos(angle*3.14f / 180.f));
+	force = cocos2d::Vec2((mass * 9.80f * sin(angle*3.14f / 180.f)) - ((mass * 9.80f)*kineticFriction),
+			mass * 9.80f * cos(angle*3.14f / 180.f));
+	if (sqrt((force.x * force.x) + (force.y * force.y)) <= mass * 9.80f * staticFriction) {
+		setVelocity(cocos2d::Vec2(0,0));
+		stopped = true;
+	}
+	else {
+		acceleration = cocos2d::Vec2(9.80f*(cos(angle*3.14f / 180.f) - (kineticFriction*sin(angle*3.14f / 180.f))),
+			-9.80f*cos(angle*3.14f / 180.f));
+		//acceleration = cocos2d::Vec2(9.80f * (sin(angle*3.14f / 180.f) - (kineticFriction*cos(angle*3.14f / 180.f))),
+		//	-9.80f * cos(angle*3.14f / 180.f));
+		velocity += acceleration * dt;
+		position = getPrimitive()->getPosition() + (velocity * dt);
+		getPrimitive()->setPosition(position);
+	}
 }

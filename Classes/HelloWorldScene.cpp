@@ -98,61 +98,92 @@ bool HelloWorld::init()
     /////////////////////////////
     // 3. add your codes below...
 
+	slope = new Slope(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(2000, 900), 30.0f);
 	block = new Block(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(200, 1000), 200.0f, 
-		cocos2d::Vec2(0.0f, 0.0f), cocos2d::Vec2(0.0f,0.0f), 30.0f, 0.10f, 0.10f);
-	slope = new Slope(this, cocos2d::Vec2(0, 900), cocos2d::Vec2(2000, 900), 0.20f, 30.0f);
+		cocos2d::Vec2(0.0f, 0.0f), cocos2d::Vec2(0.0f,0.0f), slope->getAngle(), 0.10f, 0.20f);
 	
-	data = cocos2d::Label::createWithTTF("Hello World", "fonts/Arial.ttf", 24);
+	data = cocos2d::Label::createWithTTF("Mass:" + std::to_string(block->getMass()), "fonts/Arial.ttf", 24);
 	data->setColor(cocos2d::Color3B::WHITE);
-	data->setPosition(1200, 800);
+	data->setPosition(1150, 800);
 	data->setSystemFontSize(12.0f);
 	this->addChild(data);
+
+	data1 = cocos2d::Label::createWithTTF("Mass:" + std::to_string(block->getMass()), "fonts/Arial.ttf", 24);
+	data1->setColor(cocos2d::Color3B::WHITE);
+	data1->setPosition(1150, 770);
+	data1->setSystemFontSize(12.0f);
+	this->addChild(data1);
+
+	data2 = cocos2d::Label::createWithTTF("Mass:" + std::to_string(block->getMass()), "fonts/Arial.ttf", 24);
+	data2->setColor(cocos2d::Color3B::WHITE);
+	data2->setPosition(1150, 740);
+	data2->setSystemFontSize(12.0f);
+	this->addChild(data2);
 
 }
 
 void HelloWorld::update(float dt) {
-	if (q == true) {
+	if (q == true && block->getStopped() == true && block->getStaticFriction() >= 0) {
 		block->setStaticFriction(block->getStaticFriction() - 1.0f);
-		data->setString(std::to_string(block->getStaticFriction()));
 	}
-	if (e == true) {
+	if (e == true && block->getStopped() == true) {
 		block->setStaticFriction(block->getStaticFriction() + 1.0f);
-		data->setString(std::to_string(block->getStaticFriction()));
 	}
-	if (a == true) {
-		block->setDynamicFriction(block->getDynamicFriction() - 1.0f);
-		data->setString(std::to_string(block->getDynamicFriction()));
+	if (a == true && block->getStopped() == true && block->getKineticFriction() >= 0) {
+		block->setKineticFriction(block->getKineticFriction() - 1.0f);
 	}
-	if (d == true) {
-		block->setDynamicFriction(block->getDynamicFriction() + 1.0f);
-		data->setString(std::to_string(block->getDynamicFriction()));
+	if (d == true && block->getStopped() == true) {
+		block->setKineticFriction(block->getKineticFriction() + 1.0f);
 	}
-	if (up == true) {
+	if (up == true && block->getAngle() >= 2.0f && block->getStopped() == true) {
 		slope->setAngle(slope->getAngle() - 1.0f);
 		block->setAngle(slope->getAngle());
 		slope->getPrimitive()->setRotation(slope->getAngle());
 		block->getPrimitive()->setRotation(slope->getAngle());
-		data->setString(std::to_string(block->getAngle()));
+
+		if (block->getPrimitive()->getRotation() < 30.0f) {
+			data->setPosition(400, 150);
+			data1->setPosition(400, 120);
+			data2->setPosition(400, 90);
+		}
 	}
-	if (down == true) {
+	if (down == true && block->getAngle() <= 88.0f && block->getStopped() == true) {
 		slope->setAngle(slope->getAngle() + 1.0f);
 		block->setAngle(slope->getAngle());
 		slope->getPrimitive()->setRotation(slope->getAngle());
 		block->getPrimitive()->setRotation(block->getAngle());
-		data->setString(std::to_string(block->getAngle()));
+
+		if (block->getPrimitive()->getRotation() > 45.0f) {
+			data->setPosition(1150, 800);
+			data1->setPosition(1150, 770);
+			data2->setPosition(1150, 740);
+		}
 	}
-	if (space == true) {
+	if (space == true && block->getStopped() == true) {
+		block->setStopped(false);
 		block->getPrimitive()->setPosition(cocos2d::Vec2(0, 900));
-		block->setVelocity(cocos2d::Vec2(0.0f, 0.0f));
-		//space = false;
+		block->setVelocity(cocos2d::Vec2(0.0f, 0.0));
 	}
 
-	if (block->getPrimitive()->getPosition().y < -100.0f) {
-		block->setVelocity(cocos2d::Vec2(0.0f, 0.0f));
+	if (block->getStopped() == false){
+		block->update(dt);
 	}
 
-	block->update(dt);
+	if (block->getPrimitive()->getPosition().x > 1700.0f || 
+		block->getPrimitive()->getPosition().y < -100.0f) {
+		block->setVelocity(cocos2d::Vec2(0.0f, 0.0f));
+		block->setAcceleration(cocos2d::Vec2(0.0f, 0.0f));
+		block->setStopped(true);
+	}
 
+	data->setString("Mass: " + std::to_string(block->getMass()) +  "    Angle: " 
+		+ std::to_string(block->getAngle()));
+	data1->setString("Static Friction: " + std::to_string(block->getStaticFriction()) + 
+		"    Dynamic Friction: " + std::to_string(block->getKineticFriction()));
+	data2->setString("Velocity: [" + std::to_string(block->getVelocity().x) + ", " +
+		std::to_string(block->getVelocity().y) + "]    Acceleration: [" + 
+		std::to_string(block->getAcceleration().x) + ", " + std::to_string(block->getAcceleration().y)
+		+ "]");
 }
 
 void HelloWorld::keyDown(cocos2d::EventKeyboard::KeyCode key, cocos2d::Event* event) {
